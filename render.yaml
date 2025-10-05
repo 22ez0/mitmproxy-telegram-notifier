@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: mitmproxy-interceptor
+    runtime: docker
+    plan: free
+    env:
+      - key: PORT
+        value: 10000
+      - key: PYTHON_VERSION
+        value: 3.11
+    envVars:
+      - key: TG_BOT_TOKEN
+        sync: false
+      - key: TG_CHAT_ID
+        sync: false
+    healthCheckPath: /ping
+    autoDeploy: true

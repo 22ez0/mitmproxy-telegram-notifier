@@ -1,0 +1,15 @@
+[project]
+name = "mitmproxy-telegram-notifier"
+version = "1.0.0"
+description = "Addon para mitmproxy que captura headers HTTP e envia notificações via Telegram"
+authors = ["Your Name <you@example.com>"]
+requires-python = ">=3.11"
+dependencies = [
+    "filelock>=3.19.1",
+    "flask>=3.1.0",
+    "mitmproxy>=11.0.2",
+    "pytelegrambotapi>=4.29.1",
+    "requests>=2.32.5",
+    "urllib3>=2.5.0",
+    "waitress>=3.0.2",
+]

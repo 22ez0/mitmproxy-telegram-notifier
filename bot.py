@@ -6,7 +6,8 @@ Grupo: https://t.me/+RriqgodAtpY4NTgx
 """
 import os
 import telebot
-from urllib.parse import urlparse
+import requests
+from urllib.parse import urlparse, quote
 from shared_storage import storage
 
 TELEGRAM_BOT_TOKEN = os.environ.get("TG_BOT_TOKEN", "")
@@ -25,6 +26,34 @@ def get_domain():
     return "localhost:5000"
 
 DOMAIN = get_domain()
+
+def shorten_url(long_url: str, original_url: str, url_id: str) -> str:
+    """Encurta URL usando is.gd com nome personalizado"""
+    try:
+        parsed = urlparse(original_url)
+        domain_name = parsed.netloc.replace('www.', '').split('.')[0]
+        custom_slug = f"{domain_name}_{url_id}"
+        
+        response = requests.get(
+            f"https://is.gd/create.php?format=simple&url={quote(long_url)}&shorturl={custom_slug}",
+            timeout=5
+        )
+        
+        if response.status_code == 200 and not response.text.startswith('Error'):
+            short_url = response.text.strip()
+            print(f"[Bot] URL encurtada: {long_url} -> {short_url}")
+            return short_url
+        else:
+            response_fallback = requests.get(
+                f"https://is.gd/create.php?format=simple&url={quote(long_url)}",
+                timeout=5
+            )
+            if response_fallback.status_code == 200:
+                return response_fallback.text.strip()
+            return long_url
+    except Exception as e:
+        print(f"[Bot] Erro no encurtador: {e}")
+        return long_url
 
 if not TELEGRAM_BOT_TOKEN or ":" not in TELEGRAM_BOT_TOKEN:
     print("ERRO: TG_BOT_TOKEN nao configurado corretamente")
@@ -121,11 +150,12 @@ def intercept_command(message):
         if parsed.scheme in ('http', 'https') and parsed.netloc:
             url_id = storage.store(text)
             intercept_link = f"https://{DOMAIN}/i/{url_id}"
+            short_link = shorten_url(intercept_link, text, url_id)
             
             response = f"""✅ Link gerado!
 
 🎯 Clique aqui:
-{intercept_link}
+{short_link}
 
 📌 URL alvo: {text}
 

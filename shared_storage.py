@@ -6,8 +6,11 @@ import os
 from typing import Dict, Optional
 from filelock import FileLock
 
-STORAGE_FILE = "/tmp/url_storage.json"
-LOCK_FILE = "/tmp/url_storage.lock"
+STORAGE_DIR = os.path.join(os.getcwd(), "data")
+os.makedirs(STORAGE_DIR, exist_ok=True)
+
+STORAGE_FILE = os.path.join(STORAGE_DIR, "url_storage.json")
+LOCK_FILE = os.path.join(STORAGE_DIR, "url_storage.lock")
 
 class URLStorage:
     def __init__(self, ttl_seconds: int = 3600):
@@ -39,18 +42,27 @@ class URLStorage:
                 'timestamp': time.time()
             }
             self._save_storage(storage)
+        print(f"[Storage] Armazenado: {url_id} -> {url}")
+        print(f"[Storage] Arquivo: {STORAGE_FILE}")
         return url_id
     
     def get(self, url_id: str) -> Optional[str]:
         with self.lock:
             storage = self._load_storage()
+            print(f"[Storage] Buscando ID: {url_id}")
+            print(f"[Storage] IDs disponíveis: {list(storage.keys())}")
+            print(f"[Storage] Arquivo: {STORAGE_FILE}")
             if url_id in storage:
                 data = storage[url_id]
                 if time.time() - data['timestamp'] < self.ttl_seconds:
+                    print(f"[Storage] Encontrado: {data['url']}")
                     return data['url']
                 else:
+                    print(f"[Storage] Expirado!")
                     del storage[url_id]
                     self._save_storage(storage)
+            else:
+                print(f"[Storage] ID não encontrado!")
         return None
     
     def cleanup_expired(self):

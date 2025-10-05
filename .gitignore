@@ -1,0 +1,50 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg
+*.egg-info/
+dist/
+build/
+*.log
+
+# Virtual environments
+venv/
+ENV/
+env/
+.venv/
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Replit specific
+.replit
+replit.nix
+.upm/
+uv.lock
+pyproject.toml
+
+# Local storage
+/tmp/
+data/
+*.lock
+
+# Test files
+test_*.py
+COMO_TESTAR.md
+
+# Assets
+attached_assets/
+generated-icon.png
+
+# Development
+intercept_server.py

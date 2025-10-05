@@ -31,7 +31,7 @@ class URLStorage:
             json.dump(data, f)
     
     def generate_id(self) -> str:
-        return uuid.uuid4().hex[:8]
+        return uuid.uuid4().hex[:4]
     
     def store(self, url: str) -> str:
         url_id = self.generate_id()

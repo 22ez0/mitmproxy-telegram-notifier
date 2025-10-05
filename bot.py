@@ -122,21 +122,14 @@ def intercept_command(message):
             url_id = storage.store(text)
             intercept_link = f"https://{DOMAIN}/i/{url_id}"
             
-            response = f"""✅ Link de interceptacao gerado com sucesso!
+            response = f"""✅ Link gerado!
 
-🔗 URL original:
-{text}
-
-🎯 Link de interceptacao:
+🎯 Clique aqui:
 {intercept_link}
 
-📱 Como usar:
-1. Clique no link acima (funciona direto do Telegram!)
-2. Ou copie e cole em qualquer navegador
-3. Os headers serao capturados automaticamente
-4. Voce recebera os headers em formato Python aqui
+📌 URL alvo: {text}
 
-⚡ O link funciona em Chrome, Safari, Firefox, Edge e no browser do Telegram!"""
+💡 Ao clicar, os headers serao capturados e enviados automaticamente em formato Python."""
             
             bot.reply_to(message, response, disable_web_page_preview=False)
         else:
